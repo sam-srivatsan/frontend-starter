@@ -1,13 +1,13 @@
 import { ObjectId } from "mongodb";
-import { Router, getExpressRouter } from "./framework/router";
-import { Authing, Friending, Posting, Sessioning, Grouping, Eventing } from "./app";
-import { PostOptions } from "./concepts/posting";
-import { SessionDoc } from "./concepts/sessioning";
+import { z } from "zod";
+import { Authing, Eventing, Friending, Grouping, Posting, Sessioning } from "./app";
+import { NotFoundError } from "./concepts/errors";
 import { EventDoc } from "./concepts/eventing";
 import { GroupOptions } from "./concepts/grouping";
+import { PostOptions } from "./concepts/posting";
+import { SessionDoc } from "./concepts/sessioning";
+import { Router, getExpressRouter } from "./framework/router";
 import Responses from "./responses";
-import { z } from "zod";
-import { NotAllowedError, NotFoundError } from "./concepts/errors";
 
 /**
  * Web server routes for the app. Implements synchronizations between concepts.
@@ -204,7 +204,7 @@ class Routes {
     title?: string,
     date?: string, // Keep date as string for input
     description?: string,
-    attendees?: ObjectId[]
+    attendees?: ObjectId[],
   ) {
     const user = Sessioning.getUser(session);
     const eventOid = new ObjectId(eventId);
@@ -249,17 +249,33 @@ class Routes {
   }
 
   @Router.get("/groups/:groupId/events")
-async getEventsByGroupId(session: SessionDoc, groupId: string) {
+  async getEventsByGroupId(session: SessionDoc, groupId: string) {
     // Validate groupId format
     if (!groupId || !ObjectId.isValid(groupId)) {
-        throw new NotFoundError(`Group ID ${groupId} is invalid.`);
+      throw new NotFoundError(`Group ID ${groupId} is invalid.`);
     }
 
     const groupOid = new ObjectId(groupId); // Convert string to ObjectId
     const events = await Eventing.getEventsByGroupId(groupOid); // Fetch events for the specified group ID
     return events; // Return the events found
-}
+  }
 
+  // Getter for Groups
+  @Router.get("/groups")
+  @Router.validate(z.object({ groupId: z.string().optional() }))
+  async getGroups(groupId?: string) {
+    let groups;
+    if (groupId) {
+      // Fetch a single group by ID
+      const group = await Grouping.groups.readOne({ _id: new ObjectId(groupId) });
+      if (!group) throw new NotFoundError("Group not found!");
+      return Responses.group(group); // Format the single group response
+    } else {
+      // Fetch all groups
+      groups = await Grouping.groups.readMany({});
+      return Responses.groups(groups); // Format the response for multiple groups
+    }
+  }
 }
 
 /** The web app. */

@@ -1,5 +1,6 @@
 import { Authing } from "./app";
 import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestDoc, FriendRequestNotFoundError } from "./concepts/friending";
+import { GroupDoc } from "./concepts/grouping";
 import { PostAuthorNotMatchError, PostDoc } from "./concepts/posting";
 import { Router } from "./framework/router";
 
@@ -25,6 +26,29 @@ export default class Responses {
   static async posts(posts: PostDoc[]) {
     const authors = await Authing.idsToUsernames(posts.map((post) => post.author));
     return posts.map((post, i) => ({ ...post, author: authors[i] }));
+  }
+
+  /**
+   * Convert GroupDoc into a more readable format for the frontend.
+   */
+  static async group(group: GroupDoc | null) {
+    if (!group) return group;
+    const creator = await Authing.getUserById(group.creator);
+    const members = await Authing.idsToUsernames(group.members);
+    return { ...group, creator: creator.username, members };
+  }
+
+  /**
+   * Same as {@link group} but for an array of GroupDoc for improved performance.
+   */
+  static async groups(groups: GroupDoc[]) {
+    const creators = await Authing.idsToUsernames(groups.map((group) => group.creator));
+    const membersArrays = await Promise.all(groups.map((group) => Authing.idsToUsernames(group.members)));
+    return groups.map((group, i) => ({
+      ...group,
+      creator: creators[i],
+      members: membersArrays[i],
+    }));
   }
 
   /**
