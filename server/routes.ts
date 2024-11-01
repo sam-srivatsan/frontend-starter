@@ -170,7 +170,7 @@ class Routes {
     return await Grouping.inviteUser(groupOid, inviteeOid);
   }
 
-  @Router.delete("/groups/:groupId/members")
+  @Router.delete("/group/:groupId/members")
   async leaveGroup(session: SessionDoc, groupId: string) {
     const user = Sessioning.getUser(session);
     const groupOid = new ObjectId(groupId);
@@ -248,7 +248,7 @@ class Routes {
     return { msg: "Event deleted successfully!" };
   }
 
-  @Router.get("/groups/:groupId/events")
+  @Router.get("/group/:groupId/events")
   async getEventsByGroupId(session: SessionDoc, groupId: string) {
     // Validate groupId format
     if (!groupId || !ObjectId.isValid(groupId)) {
@@ -261,7 +261,7 @@ class Routes {
   }
 
   // Getter for Groups
-  @Router.get("/groups")
+  @Router.get("/group")
   @Router.validate(z.object({ groupId: z.string().optional() }))
   async getGroups(groupId?: string) {
     let groups;
