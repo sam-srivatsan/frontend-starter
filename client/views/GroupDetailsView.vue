@@ -1,33 +1,51 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user";
+import { fetchy } from "@/utils/fetchy";
+import { storeToRefs } from "pinia";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 
+// Import PostDoc type for type safety
+import type { PostDoc } from "/Users/samvinu/Downloads/MIT/F24/6.104/frontend-starter/server/concepts/posting.ts";
+
+// Access the user store using Pinia
+const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
+
+// Set up reactive state
 const route = useRoute();
-const posts = ref([]);
+const posts = ref<PostDoc[]>([]);
 const groupId = route.params.groupId;
 
-const fetchPosts = async () => {
-  const appStore = useUserStore();
-  // posts.value = await appStore.fetchGroupPosts(groupId as string);
+// Function to fetch all posts
+const fetchAllPosts = async () => {
+  try {
+    const response = await fetchy("/posts", "GET");
+    posts.value = response; // Populate reactive posts
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+  }
 };
 
-// onMounted(() => {
-//   fetchPosts();
-// });
+// Fetch posts when component is mounted
+onMounted(() => {
+  fetchAllPosts();
+});
 </script>
 
 <template>
   <div>
     <h1>Welcome to Group: {{ groupId }}</h1>
-    <div v-if="posts.length > 0">
-      <h3>Posts:</h3>
-      <!-- <ul>
-        <li v-for="post in posts" :key="post.id">{{ post.content }}</li>
-      </ul> -->
+
+    <!-- Conditional rendering for logged-in state -->
+    <div v-if="isLoggedIn">
+      <h3>All Posts:</h3>
+      <ul v-if="posts.length > 0">
+        <li v-for="post in posts" :key="post._id.toString()">{{ post.content }}</li>
+      </ul>
+      <p v-else>No posts found in this group.</p>
     </div>
     <div v-else>
-      <p>No posts found in this group.</p>
+      <p>Please log in to view posts.</p>
     </div>
   </div>
 </template>
