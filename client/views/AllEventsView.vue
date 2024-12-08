@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import EventListComponent from "@/components/Event/EventsListComponent.vue";
+import EventListComponent from "@/components/Event/EventListComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 

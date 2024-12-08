@@ -7,6 +7,7 @@ import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import SettingView from "../views/SettingView.vue";
 import AllGroupsView from "../views/AllGroupsView.vue";
+import GroupDetailsView from "../views/GroupDetailsView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -38,6 +39,12 @@ const router = createRouter({
           return { name: "Settings" };
         }
       },
+    },
+    {
+      path: "/groups/:groupId",
+      name: "GroupDetails",
+      component: GroupDetailsView,
+      props: true, // Pass groupId as prop to component
     },
     {
       path: "/:catchAll(.*)",
