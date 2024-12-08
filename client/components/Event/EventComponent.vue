@@ -4,31 +4,31 @@ import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
 
-const props = defineProps(["group"]);
-const emit = defineEmits(["editGroup", "refreshGroups"]);
+const props = defineProps(["event"]);
+const emit = defineEmits(["editEvent", "refreshEvents"]);
 const { currentUsername } = storeToRefs(useUserStore());
 
-const deleteGroup = async () => {
+const deleteEvent = async () => {
   try {
-    await fetchy(`/api/group/${props.group._id}`, "DELETE");
+    await fetchy(`/api/event/${props.event._id}`, "DELETE");
   } catch {
     return;
   }
-  emit("refreshGroups");
+  emit("refreshEvents");
 };
 </script>
 
 <template>
-  <p class="author">{{ props.group.author }}</p>
-  <p>{{ props.group.content }}</p>
+  <p class="author">{{ props.event.author }}</p>
+  <p>{{ props.event.content }}</p>
   <div class="base">
-    <menu v-if="props.group.author == currentUsername">
-      <li><button class="btn-small pure-button" @click="emit('editGroup', props.group._id)">Edit</button></li>
-      <li><button class="button-error btn-small pure-button" @click="deleteGroup">Delete</button></li>
+    <menu v-if="props.event.author == currentUsername">
+      <li><button class="btn-small pure-button" @click="emit('editEvent', props.event._id)">Edit</button></li>
+      <li><button class="button-error btn-small pure-button" @click="deleteEvent">Delete</button></li>
     </menu>
     <article class="timestamp">
-      <p v-if="props.group.dateCreated !== props.group.dateUpdated">Edited on: {{ formatDate(props.group.dateUpdated) }}</p>
-      <p v-else>Created on: {{ formatDate(props.group.dateCreated) }}</p>
+      <p v-if="props.event.dateCreated !== props.event.dateUpdated">Edited on: {{ formatDate(props.event.dateUpdated) }}</p>
+      <p v-else>Created on: {{ formatDate(props.event.dateCreated) }}</p>
     </article>
   </div>
 </template>

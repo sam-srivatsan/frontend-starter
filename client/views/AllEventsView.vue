@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GroupListComponent from "@/components/Group/GroupListComponent.vue";
+import EventListComponent from "@/components/Event/EventsListComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 
@@ -13,7 +13,7 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
       <h1 v-if="isLoggedIn">{{ currentUsername }}'s Groups!</h1>
       <h1 v-else>Please login!</h1>
     </section>
-    <GroupListComponent v-if="isLoggedIn" />
+    <EventListComponent />
   </main>
 </template>
 

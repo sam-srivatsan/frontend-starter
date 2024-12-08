@@ -3,32 +3,32 @@ import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 import { formatDate } from "../../utils/formatDate";
 
-const props = defineProps(["group"]);
-const content = ref(props.group.content);
-const emit = defineEmits(["editGroup", "refreshGroups"]);
+const props = defineProps(["event"]);
+const content = ref(props.event.content);
+const emit = defineEmits(["editEvent", "refreshEvent"]);
 
-const editGroup = async (content: string) => {
+const editEvent = async (content: string) => {
   try {
-    await fetchy(`/api/group/${props.group._id}`, "PATCH", { body: { content: content } });
+    await fetchy(`/api/event/${props.event._id}`, "PATCH", { body: { content: content } });
   } catch (e) {
     return;
   }
-  emit("editGroup");
-  emit("refreshGroups");
+  emit("editEvent");
+  emit("refreshEvent");
 };
 </script>
 
 <template>
-  <form @submit.prevent="editGroup(content)">
-    <p class="author">{{ props.group.author }}</p>
-    <textarea id="content" v-model="content" placeholder="Create a group!" required> </textarea>
+  <form @submit.prevent="editEvent(content)">
+    <p class="author">{{ props.event.author }}</p>
+    <textarea id="content" v-model="content" placeholder="Create an event!" required> </textarea>
     <div class="base">
       <menu>
         <li><button class="btn-small pure-button-primary pure-button" type="submit">Save</button></li>
-        <li><button class="btn-small pure-button" @click="emit('editGroup')">Cancel</button></li>
+        <li><button class="btn-small pure-button" @click="emit('editEvent')">Cancel</button></li>
       </menu>
-      <p v-if="props.group.dateCreated !== props.group.dateUpdated" class="timestamp">Edited on: {{ formatDate(props.group.dateUpdated) }}</p>
-      <p v-else class="timestamp">Created on: {{ formatDate(props.group.dateCreated) }}</p>
+      <p v-if="props.event.dateCreated !== props.event.dateUpdated" class="timestamp">Edited on: {{ formatDate(props.event.dateUpdated) }}</p>
+      <p v-else class="timestamp">Created on: {{ formatDate(props.event.dateCreated) }}</p>
     </div>
   </form>
 </template>

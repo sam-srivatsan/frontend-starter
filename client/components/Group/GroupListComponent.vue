@@ -10,20 +10,33 @@ import { onBeforeMount, ref } from "vue";
 const { isLoggedIn } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
-let groups = ref<Array<Record<string, string>>>([]);
+let groups = ref<Array<Record<string, any>>>([]);
 let editing = ref("");
-// let searchAuthor = ref("");
 
+// Fetch groups and sort by createdAt in descending order
 async function getGroups(author?: string) {
   let query: Record<string, string> = author !== undefined ? { author } : {};
   let groupResults;
+
   try {
     groupResults = await fetchy("/api/group", "GET", { query });
+
+    // Debugging: Log the response to verify structure and timestamps
+    console.log("Fetched Groups:", groupResults);
+
+    if (groupResults.length > 0) {
+      // Sort based on createdAt or fallback to sorting by _id
+      groups.value = groupResults.sort((a: { createdAt: string | number | Date }, b: { createdAt: string | number | Date }) => {
+        const aTime = new Date(a.createdAt).getTime() || 0;
+        const bTime = new Date(b.createdAt).getTime() || 0;
+        return bTime - aTime;
+      });
+    } else {
+      groups.value = [];
+    }
   } catch (_) {
-    return;
+    console.error("Error fetching groups:", _);
   }
-  // searchAuthor.value = author ? author : "";
-  groups.value = groupResults;
 }
 
 function updateEditing(id: string) {

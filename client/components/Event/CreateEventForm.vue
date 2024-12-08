@@ -3,18 +3,19 @@ import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
 const titleContent = ref("");
+const dateContent = ref("");
 const descriptionContent = ref("");
-const emit = defineEmits(["refreshGroups"]);
+const emit = defineEmits(["refreshEvent"]);
 
-const createGroup = async (titleContent: string, descriptionContent: string) => {
+const createEvent = async (titleContent: string, dateContent: string, descriptionContent: string) => {
   try {
-    await fetchy("/api/group", "POST", {
-      body: { title: titleContent, description: descriptionContent },
+    await fetchy("/api/event", "POST", {
+      body: { title: titleContent, date: dateContent, description: descriptionContent },
     });
   } catch (_) {
     return;
   }
-  emit("refreshGroups");
+  emit("refreshEvent");
   emptyForm();
 };
 
@@ -25,9 +26,11 @@ const emptyForm = () => {
 </script>
 
 <template>
-  <form @submit.prevent="createGroup(titleContent, descriptionContent)">
+  <form @submit.prevent="createEvent(titleContent, dateContent, descriptionContent)">
     <label for="title">Group Title:</label>
-    <textarea id="title" v-model="titleContent" placeholder="Title your group!" required> </textarea>
+    <textarea id="title" v-model="titleContent" placeholder="Title your event!" required> </textarea>
+    <label for="date">Group Date:</label>
+    <textarea id="date" v-model="dateContent" placeholder="Add a date and time for your event!" required> </textarea>
     <label for="description">Group Description:</label>
     <textarea id="description" v-model="descriptionContent" placeholder="Add description!" optional> </textarea>
     <button type="submit" class="pure-button-primary pure-button">Add Title</button>

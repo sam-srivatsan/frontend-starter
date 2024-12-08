@@ -19,12 +19,16 @@ const deleteGroup = async () => {
 </script>
 
 <template>
-  <p class="author">{{ props.group.author }}</p>
-  <p>{{ props.group.content }}</p>
+  <p class="author">Creator: {{ props.group.creator }}</p>
+  <p class="content">Title: {{ props.group.title }}</p>
   <div class="base">
-    <menu v-if="props.group.author == currentUsername">
-      <li><button class="btn-small pure-button" @click="emit('editGroup', props.group._id)">Edit</button></li>
-      <li><button class="button-error btn-small pure-button" @click="deleteGroup">Delete</button></li>
+    <menu v-if="props.group.creator === currentUsername">
+      <li>
+        <button class="btn-small pure-button" @click="emit('editGroup', props.group._id)">Edit</button>
+      </li>
+      <li>
+        <button class="button-error btn-small pure-button" @click="deleteGroup">Delete</button>
+      </li>
     </menu>
     <article class="timestamp">
       <p v-if="props.group.dateCreated !== props.group.dateUpdated">Edited on: {{ formatDate(props.group.dateUpdated) }}</p>
