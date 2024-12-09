@@ -5,6 +5,7 @@ import { NotAllowedError, NotFoundError } from "./errors";
 
 export interface PostOptions {
   backgroundColor?: string;
+  groupId?: ObjectId;
 }
 
 export interface PostDoc extends BaseDoc {
@@ -38,6 +39,10 @@ export default class PostingConcept {
 
   async getByAuthor(author: ObjectId) {
     return await this.posts.readMany({ author });
+  }
+
+  async getPostsByGroup(groupId: ObjectId) {
+    return await this.posts.readMany({ "options.groupId": groupId }, { sort: { _id: -1 } });
   }
 
   async update(_id: ObjectId, content?: string, options?: PostOptions) {

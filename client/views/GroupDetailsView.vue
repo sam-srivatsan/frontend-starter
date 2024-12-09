@@ -1,51 +1,55 @@
 <script setup lang="ts">
-import { useUserStore } from "@/stores/user";
-import { fetchy } from "@/utils/fetchy";
-import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import PostListComponent from "@/components/Post/PostListComponent.vue";
+import EventListComponent from "@/components/Event/EventListComponent.vue";
+import { ref, onMounted } from "vue";
+// import { fetchy } from "@/utils/fetchy";
 import { useRoute } from "vue-router";
+import { useUserStore } from "@/stores/user";
+import { storeToRefs } from "pinia";
 
-// Import PostDoc type for type safety
-import type { PostDoc } from "/Users/samvinu/Downloads/MIT/F24/6.104/frontend-starter/server/concepts/posting.ts";
-
-// Access the user store using Pinia
 const { isLoggedIn } = storeToRefs(useUserStore());
 
-// Set up reactive state
 const route = useRoute();
-const posts = ref<PostDoc[]>([]);
+const posts = ref([]);
 const groupId = route.params.groupId;
 
-// Function to fetch all posts
-const fetchAllPosts = async () => {
-  try {
-    const response = await fetchy("/posts", "GET");
-    posts.value = response; // Populate reactive posts
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-  }
-};
 
-// Fetch posts when component is mounted
-onMounted(() => {
-  fetchAllPosts();
-});
+// // Fetch posts for the current group
+// const fetchAllPosts = async () => {
+//   try {
+//     const response = await fetchy(`/posts?groupId=${groupId}`, "GET");
+//     posts.value = response;
+//   } catch (error) {
+//     console.error("Error fetching posts:", error);
+//   }
+// };
+
+// onMounted(() => {
+//   fetchAllPosts();
+// });
 </script>
 
 <template>
-  <div>
-    <h1>Welcome to Group: {{ groupId }}</h1>
-
-    <!-- Conditional rendering for logged-in state -->
-    <div v-if="isLoggedIn">
-      <h3>All Posts:</h3>
-      <ul v-if="posts.length > 0">
-        <li v-for="post in posts" :key="post._id.toString()">{{ post.content }}</li>
-      </ul>
-      <p v-else>No posts found in this group.</p>
+  <div class="group-details-container">
+    <div class="half-section">
+      <PostListComponent v-if="isLoggedIn" />
     </div>
-    <div v-else>
-      <p>Please log in to view posts.</p>
+    <div class="half-section">
+      <EventListComponent v-if="isLoggedIn" />
     </div>
   </div>
 </template>
+
+<style scoped>
+.group-details-container {
+  display: flex;
+  height: 100%; /* Make it occupy the full height of the parent container */
+  background-color: var(--cordovan);
+}
+
+.half-section {
+  flex: 1; /* Each section takes up 50% of the container */
+  border: 1px solid #ccc; /* Optional: add borders for better visibility */
+  overflow-y: auto; /* Allow scrolling if content exceeds the section height */
+}
+</style>

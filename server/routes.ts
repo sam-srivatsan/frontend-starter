@@ -83,12 +83,28 @@ class Routes {
     return Responses.posts(posts);
   }
 
+  @Router.get("/group/:groupId/posts")
+  async getPostsByGroupId(groupId: string) {
+    const groupOid = new ObjectId(groupId);
+    const posts = await Posting.getPostsByGroup(groupOid);
+    return posts;
+  }
+
   @Router.post("/posts")
-  async createPost(session: SessionDoc, content: string, options?: PostOptions) {
+  async createPost(session: SessionDoc, content: string, options?: PostOptions, groupId?: string) {
     const user = Sessioning.getUser(session);
-    const created = await Posting.create(user, content, options);
+
+    const optionsWithGroup = { ...options, groupId: groupId ? new ObjectId(groupId) : undefined };
+    const created = await Posting.create(user, content, optionsWithGroup);
     return { msg: created.msg, post: await Responses.post(created.post) };
   }
+
+  // @Router.post("/posts")
+  // async createPost(session: SessionDoc, content: string, options?: PostOptions) {
+  //   const user = Sessioning.getUser(session);
+  //   const created = await Posting.create(user, content, options);
+  //   return { msg: created.msg, post: await Responses.post(created.post) };
+  // }
 
   @Router.patch("/posts/:id")
   async updatePost(session: SessionDoc, id: string, content?: string, options?: PostOptions) {
