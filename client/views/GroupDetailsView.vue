@@ -9,7 +9,7 @@ import { useRoute } from "vue-router";
 import type { PostDoc } from "/Users/samvinu/Downloads/MIT/F24/6.104/frontend-starter/server/concepts/posting.ts";
 
 // Access the user store using Pinia
-const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
+const { isLoggedIn } = storeToRefs(useUserStore());
 
 // Set up reactive state
 const route = useRoute();

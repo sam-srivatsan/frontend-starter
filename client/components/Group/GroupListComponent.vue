@@ -1,22 +1,3 @@
-<template>
-  <section v-if="isLoggedIn">
-    <h2>Create a group:</h2>
-    <CreateGroupForm @refreshGroups="getGroups" />
-  </section>
-  <div class="row"></div>
-  <section class="groups" v-if="loaded && groups.length !== 0">
-    <!-- Wrap each group with router-link -->
-    <router-link v-for="group in groups" :key="group._id" :to="`/group/${group._id}`" class="group-link">
-      <article>
-        <GroupComponent v-if="editing !== group._id" :group="group" @refreshGroups="getGroups" @editGroup="updateEditing" />
-        <EditGroupForm v-else :group="group" @refreshGroups="getGroups" @editGroup="updateEditing" />
-      </article>
-    </router-link>
-  </section>
-  <p v-else-if="loaded">No groups found</p>
-  <p v-else>Loading...</p>
-</template>
-
 <script setup lang="ts">
 import CreateGroupForm from "@/components/Group/CreateGroupForm.vue";
 import EditGroupForm from "@/components/Group/EditGroupForm.vue";
@@ -64,6 +45,25 @@ onBeforeMount(async () => {
   await getGroups();
 });
 </script>
+
+<template>
+  <section v-if="isLoggedIn">
+    <h2>Create a group:</h2>
+    <CreateGroupForm @refreshGroups="getGroups" />
+  </section>
+  <div class="row"></div>
+  <section class="groups" v-if="loaded && groups.length !== 0">
+    <!-- Wrap each group with router-link -->
+    <router-link v-for="group in groups" :key="group._id" :to="`/groups/${group._id}`" class="group-link">
+      <article>
+        <GroupComponent v-if="editing !== group._id" :group="group" @refreshGroups="getGroups" @editGroup="updateEditing" />
+        <EditGroupForm v-else :group="group" @refreshGroups="getGroups" @editGroup="updateEditing" />
+      </article>
+    </router-link>
+  </section>
+  <p v-else-if="loaded">No groups found</p>
+  <p v-else>Loading...</p>
+</template>
 
 <style scoped>
 .group-link {
