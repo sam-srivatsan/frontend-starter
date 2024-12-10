@@ -5,12 +5,12 @@ import { NotAllowedError, NotFoundError } from "./errors";
 
 export interface PostOptions {
   backgroundColor?: string;
-  groupId?: ObjectId;
 }
 
 export interface PostDoc extends BaseDoc {
   author: ObjectId;
   content: string;
+  groupId: ObjectId;
   options?: PostOptions;
 }
 
@@ -27,8 +27,8 @@ export default class PostingConcept {
     this.posts = new DocCollection<PostDoc>(collectionName);
   }
 
-  async create(author: ObjectId, content: string, options?: PostOptions) {
-    const _id = await this.posts.createOne({ author, content, options });
+  async create(author: ObjectId, content: string, groupId: ObjectId, options?: PostOptions) {
+    const _id = await this.posts.createOne({ author, content, groupId, options });
     return { msg: "Post successfully created!", post: await this.posts.readOne({ _id }) };
   }
 

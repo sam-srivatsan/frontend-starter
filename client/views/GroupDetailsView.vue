@@ -2,7 +2,7 @@
 import PostListComponent from "@/components/Post/PostListComponent.vue";
 import EventListComponent from "@/components/Event/EventListComponent.vue";
 import { ref, onMounted } from "vue";
-// import { fetchy } from "@/utils/fetchy";
+import { fetchy } from "@/utils/fetchy";
 import { useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
@@ -12,24 +12,54 @@ const { isLoggedIn } = storeToRefs(useUserStore());
 const route = useRoute();
 const posts = ref([]);
 const groupId = route.params.groupId;
+const groupTitle = ref<{ title: string } | null>(null);
 
+// Fetch group details using the group_id and then filter through posts using the route getPostsByGroupId
+// fetchGroupPosts()
 
-// // Fetch posts for the current group
-// const fetchAllPosts = async () => {
-//   try {
-//     const response = await fetchy(`/posts?groupId=${groupId}`, "GET");
-//     posts.value = response;
-//   } catch (error) {
-//     console.error("Error fetching posts:", error);
-//   }
-// };
+// Fetch posts for the given group ID
+const fetchGroupPosts = async () => {
+  try {
+    const response = await fetchy(`/api/group/:${groupId}/posts`, "GET");
+    if (!response.ok) {
+      throw new Error(`Failed to fetch posts: ${response.statusText}`);
+    }
+    const data = await response.json();
+    posts.value = data;
+  } catch (error) {
+    console.error("Error fetching group posts:", error);
+    posts.value = [];
+  }
+};
 
-// onMounted(() => {
-//   fetchAllPosts();
-// });
+// Fetch group details
+const fetchGroupTitle = async () => {
+  try {
+    const response = await fetchy(`/api/groups/:${groupId}`, "GET");
+    if (!response.ok) {
+      throw new Error(`Failed to fetch group title: ${response.statusText}`);
+    }
+    groupTitle.value = await response.json();
+  } catch (error) {
+    console.error("Error fetching group title:", error);
+    groupTitle.value = null;
+  }
+};
+
+// Fetch data on component mount
+onMounted(() => {
+  if (groupId) {
+    fetchGroupPosts();
+    fetchGroupTitle();
+  }
+});
+
 </script>
 
 <template>
+  <header class="group-header">
+    <h1>Group: {{ groupTitle || "Loading..." }}</h1>
+  </header>
   <div class="group-details-container">
     <div class="half-section">
       <PostListComponent v-if="isLoggedIn" />

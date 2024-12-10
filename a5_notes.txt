@@ -1,43 +1,10 @@
-1. routes: getter for groups
+- in groupdetailsview: fetching group details and route for getpostsbygroupid
 
-:root {
-  --red: #fb8500; /* Replacing red with an orange shade from your scheme */
-  --base-bg: #8ecae6; /* Soft blue for background */
-  --primary: #219ebc; /* Primary blue */
-  --secondary: #023047; /* Dark blue */
-  --accent: #ffb703; /* Yellow accent */
-
-  /* If you need additional shades */
-  --text-color: #023047; /* Dark blue for text */
-  --button-bg: #219ebc; /* Button background */
-}
-
-button.btn-small {
-  font-size: 80%;
-}
-
-button.button-error {
-  color: white;
-  background: var(--secondary);
-}
-
-a.button {
-  color: #212529;
-  background-color: #f1f3f5;
-  border: 1px solid #dee2e6;
-  border-radius: 0.25em;
-  padding: 0.375em 0.75em;
-  text-decoration: none;
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1em;
-}
+- family connection scrapbook multimedia: link to image hosted on goog le drive, use the image src=link
+  -people who want to post multimedia can drop a google drive link
+  - posts could be photo dumps for people to reply to
+- translation embed
 
 
-
-Analysis, Automation & Controls, Avionics, integration & test engineering
+- skills exchange instead of posting --> once someone claims a match, you can create an event for them
+TA review session code: friending

@@ -62,6 +62,14 @@ export default class GroupingConcept {
     return group.members;
   }
 
+  async getTitleById(groupId: ObjectId): Promise<string> {
+    const group = await this.groups.readOne({ _id: groupId });
+    if (!group) {
+      throw new NotFoundError("Group not found!");
+    }
+    return group.title;
+  }
+
   async assertIsInGroup(userId: ObjectId, groupId: ObjectId) {
     const group = await this.groups.readOne({ _id: groupId });
     if (!group) {

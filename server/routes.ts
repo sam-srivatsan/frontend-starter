@@ -83,6 +83,14 @@ class Routes {
     return Responses.posts(posts);
   }
 
+  @Router.get("/group/:groupId")
+  async getGroupTitle(groupId: string) {
+    const groupOid = new ObjectId(groupId);
+    const title = await Grouping.getTitleById(groupOid);
+    if (!title) throw new Error("Group title not found");
+    return title;
+  }
+
   @Router.get("/group/:groupId/posts")
   async getPostsByGroupId(groupId: string) {
     const groupOid = new ObjectId(groupId);
@@ -94,9 +102,17 @@ class Routes {
   async createPost(session: SessionDoc, content: string, options?: PostOptions, groupId?: string) {
     const user = Sessioning.getUser(session);
 
-    const optionsWithGroup = { ...options, groupId: groupId ? new ObjectId(groupId) : undefined };
-    const created = await Posting.create(user, content, optionsWithGroup);
-    return { msg: created.msg, post: await Responses.post(created.post) };
+    // Convert groupId to ObjectId if provided
+    const groupOid = new ObjectId(groupId);
+
+    // Call Posting.create with the user, content, options, and groupOid
+    const created = await Posting.create(user, content, groupOid, options);
+
+    // Format the response
+    return {
+      msg: created.msg,
+      post: await Responses.post(created.post),
+    };
   }
 
   // @Router.post("/posts")
