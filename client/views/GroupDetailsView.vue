@@ -35,7 +35,7 @@ const fetchGroupPosts = async () => {
 // Fetch group details
 const fetchGroupTitle = async () => {
   try {
-    const response = await fetchy(`/api/groups/:${groupId}`, "GET");
+    const response = await fetchy(`/api/group/:${groupId}`, "GET");
     if (!response.ok) {
       throw new Error(`Failed to fetch group title: ${response.statusText}`);
     }
