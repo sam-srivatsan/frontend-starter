@@ -24,7 +24,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: "/groups",
+      path: "/group",
       name: "Groups",
       component: AllGroupsView,
     },
@@ -41,7 +41,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/groups/:groupId",
+      path: "/group/:groupId",
       name: "GroupDetails",
       component: GroupDetailsView,
       props: true, // Pass groupId as prop to component
