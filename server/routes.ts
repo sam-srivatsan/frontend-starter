@@ -95,13 +95,14 @@ class Routes {
   async getPostsByGroupId(groupId: string) {
     const groupOid = new ObjectId(groupId);
     const posts = await Posting.getPostsByGroup(groupOid);
+    console.log("posts", posts);
     return posts;
   }
 
   @Router.post("/posts")
-  async createPost(session: SessionDoc, content: string, options?: PostOptions, groupId?: string) {
+  async createPost(session: SessionDoc, content: string, groupId: string, options?: PostOptions) {
     const user = Sessioning.getUser(session);
-
+    console.log("groupid inside posts api", groupId);
     // Convert groupId to ObjectId if provided
     const groupOid = new ObjectId(groupId);
 

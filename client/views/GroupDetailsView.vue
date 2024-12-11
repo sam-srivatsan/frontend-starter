@@ -1,29 +1,31 @@
 <script setup lang="ts">
-import PostListComponent from "@/components/Post/PostListComponent.vue";
 import EventListComponent from "@/components/Event/EventListComponent.vue";
-import { ref, onMounted } from "vue";
-import { fetchy } from "@/utils/fetchy";
-import { useRoute } from "vue-router";
+import PostListComponent from "@/components/Post/PostListComponent.vue";
 import { useUserStore } from "@/stores/user";
+import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
-
+import { onMounted, ref, toRefs, watch } from "vue";
 const { isLoggedIn } = storeToRefs(useUserStore());
 
-const route = useRoute();
-const posts = ref([]);
-const groupId = route.params.groupId;
-const groupTitle = ref<{ title: string } | null>(null);
+// Define props
+const props = defineProps<{
+  currentDate?: string; // Optional: If date is relevant for this component
+  groupId: string; // Group ID passed from parent
+}>();
 
-// Fetch group details using the group_id and then filter through posts using the route getPostsByGroupId
-// fetchGroupPosts()
+// Define emits
+const emit = defineEmits(["group-loaded"]); // Example emit for notifying parent when group data is loaded
+
+const { currentDate, groupId } = toRefs(props); // Make props reactive
+const groupTitle = ref("");
+const posts = ref([]);
+const loaded = ref(false);
 
 // Fetch posts for the given group ID
 const fetchGroupPosts = async () => {
   try {
-    const response = await fetchy(`/api/group/:${groupId}/posts`, "GET");
-    if (!response.ok) {
-      throw new Error(`Failed to fetch posts: ${response.statusText}`);
-    }
+    const response = await fetchy(`/api/group/${groupId.value}/posts`, "GET");
+    console.log("group post fetch response", response);
     const data = await response.json();
     posts.value = data;
   } catch (error) {
@@ -35,34 +37,44 @@ const fetchGroupPosts = async () => {
 // Fetch group details
 const fetchGroupTitle = async () => {
   try {
-    const response = await fetchy(`/api/group/:${groupId}`, "GET");
-    if (!response.ok) {
-      throw new Error(`Failed to fetch group title: ${response.statusText}`);
-    }
-    groupTitle.value = await response.json();
+    const title = await fetchy(`/api/group/${groupId.value}`, "GET");
+    groupTitle.value = title || "Untitled Group";
   } catch (error) {
     console.error("Error fetching group title:", error);
-    groupTitle.value = null;
+    groupTitle.value = "Error loading title";
+  } finally {
+    loaded.value = true;
+    emit("group-loaded", { groupId: groupId.value, groupTitle: groupTitle.value });
   }
 };
 
-// Fetch data on component mount
-onMounted(() => {
-  if (groupId) {
-    fetchGroupPosts();
-    fetchGroupTitle();
-  }
+// Watch for changes in props.groupId and reload data
+watch(groupId, async () => {
+  loaded.value = false; // Reset loading state
+  await fetchGroupTitle();
+  await fetchGroupPosts();
 });
 
+// Fetch data on component mount
+onMounted(async () => {
+  if (!groupId.value) {
+    console.error("No groupId provided");
+    return;
+  }
+
+  await fetchGroupTitle();
+  await fetchGroupPosts();
+});
 </script>
 
 <template>
   <header class="group-header">
-    <h1>Group: {{ groupTitle || "Loading..." }}</h1>
+    <h1 v-if="loaded">Group: {{ groupTitle }}</h1>
+    <h1 v-else>Loading...</h1>
   </header>
   <div class="group-details-container">
     <div class="half-section">
-      <PostListComponent v-if="isLoggedIn" />
+      <PostListComponent :groupId="groupId" v-if="isLoggedIn" />
     </div>
     <div class="half-section">
       <EventListComponent v-if="isLoggedIn" />

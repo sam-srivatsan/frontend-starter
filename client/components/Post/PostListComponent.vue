@@ -10,6 +10,12 @@ import SearchPostForm from "./SearchPostForm.vue";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
 
+// Define props
+const props = defineProps<{
+  currentDate?: string; // Optional: If date is relevant for this component
+  groupId: string; // Group ID passed from parent
+}>();
+
 const loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
@@ -19,7 +25,7 @@ async function getPosts(author?: string) {
   let query: Record<string, string> = author !== undefined ? { author } : {};
   let postResults;
   try {
-    postResults = await fetchy("/api/posts", "GET", { query });
+    postResults = await fetchy(`/api/group/${props.groupId}/posts`, "GET");
   } catch (_) {
     return;
   }
@@ -40,7 +46,7 @@ onBeforeMount(async () => {
 <template>
   <section v-if="isLoggedIn">
     <h2>Create a post:</h2>
-    <CreatePostForm @refreshPosts="getPosts" />
+    <CreatePostForm :groupId="groupId" @refreshPosts="getPosts" />
   </section>
   <div class="row">
     <h2 v-if="!searchAuthor">Posts:</h2>

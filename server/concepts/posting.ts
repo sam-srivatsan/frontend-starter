@@ -28,6 +28,7 @@ export default class PostingConcept {
   }
 
   async create(author: ObjectId, content: string, groupId: ObjectId, options?: PostOptions) {
+    console.log("inside create of posting.ts", groupId);
     const _id = await this.posts.createOne({ author, content, groupId, options });
     return { msg: "Post successfully created!", post: await this.posts.readOne({ _id }) };
   }
@@ -42,7 +43,12 @@ export default class PostingConcept {
   }
 
   async getPostsByGroup(groupId: ObjectId) {
-    return await this.posts.readMany({ "options.groupId": groupId }, { sort: { _id: -1 } });
+    console.log("calling getpostsbygroup. groupid:", groupId);
+    const allPosts = await this.posts.readMany({}, { sort: { _id: -1 } }); //array of Post Objects
+    const filtered = allPosts.filter((post) => post.groupId.equals(groupId));
+    // console.log("allposts",allPosts);
+    // console.log("filtered",filtered)
+    return filtered;
   }
 
   async update(_id: ObjectId, content?: string, options?: PostOptions) {

@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import { ObjectId } from "mongodb";
 
 const content = ref("");
 const emit = defineEmits(["refreshPosts"]);
 
-const createPost = async (content: string) => {
+// Define props
+const props = defineProps<{
+  currentDate?: string; // Optional: If date is relevant for this component
+  groupId: string; // Group ID passed from parent
+}>();
+
+const createPost = async (content: string, groupId: string) => {
   try {
+    console.log('groupid inside createfrom frontend', groupId)
     await fetchy("/api/posts", "POST", {
-      body: { content },
+      body: { content, groupId }
     });
   } catch (_) {
     return;
@@ -23,7 +31,7 @@ const emptyForm = () => {
 </script>
 
 <template>
-  <form @submit.prevent="createPost(content)">
+  <form @submit.prevent="createPost(content, props.groupId)">
     <label for="content">Post Contents:</label>
     <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
     <button type="submit" class="pure-button-primary pure-button">Create Post</button>
