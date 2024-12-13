@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import EventListComponent from "@/components/Event/EventListComponent.vue";
 import PostListComponent from "@/components/Post/PostListComponent.vue";
-import ScrapbookListComponent from "@/components/Scrapbook/ScrapbookListComponent.vue";
+import ImagePostListComponent from "@/components/ImagePost/ImagePostListComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
@@ -91,7 +91,7 @@ onMounted(async () => {
     </div>
 
     <div v-if="activeTab === 'Scrapbook'" class="tab-content">
-      <ScrapbookListComponent :groupId="groupId" v-if="isLoggedIn" />
+      <ImagePostListComponent :groupId="groupId" v-if="isLoggedIn" />
     </div>
   </main>
 </template>

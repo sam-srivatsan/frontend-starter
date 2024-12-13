@@ -112,7 +112,7 @@ class Routes {
     const groupOid = new ObjectId(groupId);
 
     // Call Posting.create with the user, content, options, and groupOid
-    const created = await Posting.create(user, content, groupOid, options);
+    const created = await Posting.createPost(user, content, groupOid, options);
 
     // Format the response
     return {
@@ -126,7 +126,7 @@ class Routes {
     const user = Sessioning.getUser(session);
     const oid = new ObjectId(id);
     await Posting.assertAuthorIsUser(oid, user);
-    return await Posting.update(oid, content, options);
+    return await Posting.updatePost(oid, content, options);
   }
 
   @Router.delete("/posts/:id")
@@ -134,7 +134,47 @@ class Routes {
     const user = Sessioning.getUser(session);
     const oid = new ObjectId(id);
     await Posting.assertAuthorIsUser(oid, user);
-    return Posting.delete(oid);
+    return Posting.deletePost(oid);
+  }
+
+  // Image Posts Routes
+  @Router.get("/image-posts")
+  async getImagePosts() {
+    return await Posting.getImagePosts();
+  }
+
+  @Router.get("/group/:groupId/image-posts")
+  async getImagePostsByGroupId(groupId: string) {
+    console.log("entered getImagePostsbyGroupId in routes.ts")
+    const groupOid = new ObjectId(groupId);
+    return await Posting.getImagePostsByGroup(groupOid);
+  }
+
+  @Router.post("/image-posts")
+  async createImagePost(session: SessionDoc, imageUrl: string, groupId: string, description?: string, options?: PostOptions) {
+    const user = Sessioning.getUser(session);
+    const groupOid = new ObjectId(groupId);
+
+    // Call Posting.createImagePost to handle image post creation
+    const created = await Posting.createImagePost(user, imageUrl, groupOid, description, options);
+
+    return created; // Return the raw creation result
+  }
+
+  @Router.patch("/image-posts/:id")
+  async updateImagePost(session: SessionDoc, id: string, imageUrl?: string, description?: string, options?: PostOptions) {
+    const user = Sessioning.getUser(session);
+    const oid = new ObjectId(id);
+    await Posting.assertImagePostAuthorIsUser(oid, user); // Ensure the user is the author
+    return await Posting.updateImagePost(oid, imageUrl, description, options);
+  }
+
+  @Router.delete("/image-posts/:id")
+  async deleteImagePost(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    const oid = new ObjectId(id);
+    await Posting.assertImagePostAuthorIsUser(oid, user); // Ensure the user is the author
+    return await Posting.deleteImagePost(oid);
   }
 
   @Router.get("/friends")

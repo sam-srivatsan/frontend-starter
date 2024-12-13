@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CreatePostForm from "@/components/Post/CreatePostForm.vue";
-import ScrapbookComponent from "@/components/Scrapbook/ScrapbookComponent.vue";
+import CreateImagePostForm from "./CreateImagePostForm.vue";
+import ImagePostComponent from "@/components/ImagePost/ImagePostComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
@@ -15,20 +15,20 @@ const props = defineProps<{
 }>();
 
 const loaded = ref(false);
-let posts = ref<Array<Record<string, string>>>([]);
+let imagePosts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let searchAuthor = ref("");
 
-async function getPosts(author?: string) {
+async function getImagePosts(author?: string) {
   let query: Record<string, string> = author !== undefined ? { author } : {};
-  let postResults;
+  let imagePostResults;
   try {
-    postResults = await fetchy(`/api/group/${props.groupId}/posts`, "GET");
+    imagePostResults = await fetchy(`/api/group/${props.groupId}/image-posts`, "GET");
   } catch (_) {
     return;
   }
   searchAuthor.value = author ? author : "";
-  posts.value = postResults;
+  imagePosts.value = imagePostResults;
 }
 
 function updateEditing(id: string) {
@@ -36,22 +36,22 @@ function updateEditing(id: string) {
 }
 
 onBeforeMount(async () => {
-  await getPosts();
+  await getImagePosts();
   loaded.value = true;
 });
 </script>
 
 <template>
   <section v-if="isLoggedIn">
-    <h2>Create a post:</h2>
-    <CreatePostForm :groupId="groupId" @refreshPosts="getPosts" />
+    <h2>Create an image post:</h2>
+    <CreateImagePostForm :groupId="groupId" @refreshImagePosts="getImagePosts" />
   </section>
-  <section class="posts" v-if="loaded && posts.length !== 0">
-    <article v-for="post in posts" :key="post._id">
-      <ScrapbookComponent v-if="editing !== post._id" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+  <section class="posts" v-if="loaded && imagePosts.length !== 0">
+    <article v-for="imagePost in imagePosts" :key="imagePost._id">
+      <ImagePostComponent v-if="editing !== imagePost._id" :imagePost="imagePost" @refreshImagePosts="getImagePosts" @editImagePost="updateEditing" />
     </article>
   </section>
-  <p v-else-if="loaded">No photos found</p>
+  <p v-else-if="loaded">No image posts found</p>
   <p v-else>Loading...</p>
 </template>
 

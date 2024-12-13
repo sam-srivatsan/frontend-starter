@@ -9,4 +9,4 @@ then in postcomponent (or that version for the scrapbook image posting), put the
 5. create a scrapbook view and add to tabs
 6. make scrapbook a different class/database from posting (images)
 7. google translate api
-8. magnify font?
+8. magnify font
