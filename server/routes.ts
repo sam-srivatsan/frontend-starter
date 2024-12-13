@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { z } from "zod";
-import { Authing, Eventing, Friending, Grouping, Posting, Sessioning } from "./app";
+import { Authing, Eventing, Friending, Grouping, Posting, Sessioning, Translating } from "./app";
 import { NotFoundError } from "./concepts/errors";
 import { EventDoc } from "./concepts/eventing";
 import { GroupOptions } from "./concepts/grouping";
@@ -306,6 +306,17 @@ class Routes {
       // Fetch all groups
       groups = await Grouping.groups.readMany({});
       return Responses.groups(groups); // Format the response for multiple groups
+    }
+  }
+
+  @Router.post("/translate")
+  async translateText(session: SessionDoc, text: string, targetLanguage: string) {
+    try {
+      // Call Google Translate API (or any translation service)
+      const translatedText = await Translating.translateText(text, targetLanguage);
+      return { translatedText };
+    } catch (error) {
+      throw new Error("Could not translate text.");
     }
   }
 }

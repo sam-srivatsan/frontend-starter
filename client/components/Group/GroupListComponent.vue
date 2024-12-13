@@ -52,6 +52,7 @@ onBeforeMount(async () => {
     <CreateGroupForm @refreshGroups="getGroups" />
   </section>
   <div class="row"></div>
+  <div id="google_translate_element"></div>
   <section class="groups" v-if="loaded && groups.length !== 0">
     <!-- Wrap each group with router-link -->
     <router-link v-for="group in groups" :key="group._id" :to="`/group/${group._id}`" class="group-link">
