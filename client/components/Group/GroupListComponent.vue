@@ -19,7 +19,7 @@ async function getGroups(author?: string) {
 
   try {
     groupResults = await fetchy("/api/group", "GET", { query });
-    console.log("Fetched Groups:", groupResults);
+    // console.log("Fetched Groups:", groupResults);
 
     if (groupResults.length > 0) {
       groups.value = groupResults.sort((a: { createdAt: string | number | Date }, b: { createdAt: string | number | Date }) => {

@@ -9,6 +9,11 @@ import { onBeforeMount, ref } from "vue";
 
 const { isLoggedIn } = storeToRefs(useUserStore());
 
+// Define props
+const props = defineProps<{
+  groupId: string; // Group ID passed from parent
+}>();
+
 const loaded = ref(false);
 let events = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
@@ -18,7 +23,7 @@ async function getEvents(author?: string) {
   let query: Record<string, string> = author !== undefined ? { author } : {};
   let eventResults;
   try {
-    eventResults = await fetchy("/api/event", "GET", { query });
+    eventResults = await fetchy(`/api/group/${props.groupId}/events`, "GET");
   } catch (_) {
     return;
   }
@@ -39,7 +44,7 @@ onBeforeMount(async () => {
 <template>
   <section v-if="isLoggedIn">
     <h2>Create an event:</h2>
-    <CreateEventForm @refreshEvents="getEvents" />
+    <CreateEventForm :groupId="groupId" @refreshEvents="getEvents" />
   </section>
   <div class="column">
     <!-- <h2 v-if="!searchAuthor">Events:</h2>

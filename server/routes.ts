@@ -95,7 +95,6 @@ class Routes {
   async getPostsByGroupId(groupId: string) {
     const groupOid = new ObjectId(groupId);
     const posts = await Posting.getPostsByGroup(groupOid);
-    console.log("posts", posts);
     return posts;
   }
 
@@ -115,13 +114,6 @@ class Routes {
       post: await Responses.post(created.post),
     };
   }
-
-  // @Router.post("/posts")
-  // async createPost(session: SessionDoc, content: string, options?: PostOptions) {
-  //   const user = Sessioning.getUser(session);
-  //   const created = await Posting.create(user, content, options);
-  //   return { msg: created.msg, post: await Responses.post(created.post) };
-  // }
 
   @Router.patch("/posts/:id")
   async updatePost(session: SessionDoc, id: string, content?: string, options?: PostOptions) {
@@ -219,7 +211,7 @@ class Routes {
     return result;
   }
 
-  @Router.post("/events/:groupId")
+  @Router.post("/events")
   async createEvent(session: SessionDoc, groupId: string, title: string, date: string, description?: string) {
     const user = Sessioning.getUser(session);
     const groupOid = new ObjectId(groupId);
@@ -289,7 +281,8 @@ class Routes {
     }
 
     const groupOid = new ObjectId(groupId); // Convert string to ObjectId
-    const events = await Eventing.getEventsByGroupId(groupOid); // Fetch events for the specified group ID
+    const events = await Eventing.getEventsByGroup(groupOid); // Fetch events for the specified group ID
+    console.log("events", events);
     return events; // Return the events found
   }
 

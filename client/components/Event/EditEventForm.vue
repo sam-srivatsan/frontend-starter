@@ -9,7 +9,7 @@ const emit = defineEmits(["editEvent", "refreshEvent"]);
 
 const editEvent = async (content: string) => {
   try {
-    await fetchy(`/api/event/${props.event._id}`, "PATCH", { body: { content: content } });
+    await fetchy(`/api/events/${props.event._id}`, "PATCH", { body: { content: content } });
   } catch (e) {
     return;
   }
@@ -20,7 +20,7 @@ const editEvent = async (content: string) => {
 
 <template>
   <form @submit.prevent="editEvent(content)">
-    <p class="author">{{ props.event.author }}</p>
+    <p class="creator">{{ props.event.creator }}</p>
     <textarea id="content" v-model="content" placeholder="Create an event!" required> </textarea>
     <div class="base">
       <menu>
@@ -53,7 +53,7 @@ p {
   margin: 0em;
 }
 
-.author {
+.creator {
   font-weight: bold;
   font-size: 1.2em;
 }

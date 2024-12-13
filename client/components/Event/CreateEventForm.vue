@@ -7,10 +7,15 @@ const dateContent = ref("");
 const descriptionContent = ref("");
 const emit = defineEmits(["refreshEvent"]);
 
-const createEvent = async (titleContent: string, dateContent: string, descriptionContent: string) => {
+// Define props
+const props = defineProps<{
+  groupId: string; // Group ID passed from parent
+}>();
+
+const createEvent = async (titleContent: string, dateContent: string, descriptionContent: string, groupId: string) => {
   try {
-    await fetchy("/api/event", "POST", {
-      body: { title: titleContent, date: dateContent, description: descriptionContent },
+    await fetchy("/api/events", "POST", {
+      body: { title: titleContent, date: dateContent, description: descriptionContent, groupId },
     });
   } catch (_) {
     return;
@@ -26,14 +31,14 @@ const emptyForm = () => {
 </script>
 
 <template>
-  <form @submit.prevent="createEvent(titleContent, dateContent, descriptionContent)">
-    <label for="title">Group Title:</label>
+  <form @submit.prevent="createEvent(titleContent, dateContent, descriptionContent, props.groupId)">
+    <label for="title">Event Title:</label>
     <textarea id="title" v-model="titleContent" placeholder="Title your event!" required> </textarea>
-    <label for="date">Group Date:</label>
+    <label for="date">Event Date:</label>
     <textarea id="date" v-model="dateContent" placeholder="Add a date and time for your event!" required> </textarea>
-    <label for="description">Group Description:</label>
+    <label for="description">Event Description:</label>
     <textarea id="description" v-model="descriptionContent" placeholder="Add description!" optional> </textarea>
-    <button type="submit" class="pure-button-primary pure-button">Add Title</button>
+    <button type="submit" class="pure-button-primary pure-button">Create Event</button>
   </form>
 </template>
 

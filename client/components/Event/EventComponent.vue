@@ -5,24 +5,24 @@ import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
 
 const props = defineProps(["event"]);
-const emit = defineEmits(["editEvent", "refreshEvents"]);
+const emit = defineEmits(["editEvent", "refreshEvent"]);
 const { currentUsername } = storeToRefs(useUserStore());
 
 const deleteEvent = async () => {
   try {
-    await fetchy(`/api/event/${props.event._id}`, "DELETE");
+    await fetchy(`/api/events/${props.event._id}`, "DELETE");
   } catch {
     return;
   }
-  emit("refreshEvents");
+  emit("refreshEvent");
 };
 </script>
 
 <template>
-  <p class="author">{{ props.event.author }}</p>
+  <p class="creator">{{ props.event.creator }}</p>
   <p>{{ props.event.content }}</p>
   <div class="base">
-    <menu v-if="props.event.author == currentUsername">
+    <menu v-if="props.event.creator == currentUsername">
       <li><button class="btn-small pure-button" @click="emit('editEvent', props.event._id)">Edit</button></li>
       <li><button class="button-error btn-small pure-button" @click="deleteEvent">Delete</button></li>
     </menu>
@@ -38,7 +38,7 @@ p {
   margin: 0em;
 }
 
-.author {
+.creator {
   font-weight: bold;
   font-size: 1.2em;
 }

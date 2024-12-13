@@ -7,7 +7,7 @@ const emit = defineEmits(["refreshPosts"]);
 
 // Define props
 const props = defineProps<{
-  currentDate?: string; // Optional: If date is relevant for this component
+  currentDate?: string; // Optional
   groupId: string; // Group ID passed from parent
 }>();
 

@@ -16,7 +16,7 @@ const props = defineProps<{
 // Define emits
 const emit = defineEmits(["group-loaded"]); // Example emit for notifying parent when group data is loaded
 
-const { currentDate, groupId } = toRefs(props); // Make props reactive
+const { groupId } = toRefs(props); // Make props reactive
 const groupTitle = ref("");
 const posts = ref([]);
 const loaded = ref(false);
@@ -25,7 +25,7 @@ const loaded = ref(false);
 const fetchGroupPosts = async () => {
   try {
     const response = await fetchy(`/api/group/${groupId.value}/posts`, "GET");
-    console.log("group post fetch response", response);
+    // console.log("group post fetch response", response);
     const data = await response.json();
     posts.value = data;
   } catch (error) {
@@ -63,7 +63,7 @@ onMounted(async () => {
   }
 
   await fetchGroupTitle();
-  await fetchGroupPosts();
+  // await fetchGroupPosts();
 });
 </script>
 
@@ -77,7 +77,7 @@ onMounted(async () => {
       <PostListComponent :groupId="groupId" v-if="isLoggedIn" />
     </div>
     <div class="half-section">
-      <EventListComponent v-if="isLoggedIn" />
+      <EventListComponent :groupId="groupId" v-if="isLoggedIn" />
     </div>
   </div>
 </template>
