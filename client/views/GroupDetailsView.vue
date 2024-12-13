@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import EventListComponent from "@/components/Event/EventListComponent.vue";
 import PostListComponent from "@/components/Post/PostListComponent.vue";
+import ScrapbookListComponent from "@/components/Scrapbook/ScrapbookListComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
@@ -20,6 +21,8 @@ const { groupId } = toRefs(props); // Make props reactive
 const groupTitle = ref("");
 const posts = ref([]);
 const loaded = ref(false);
+const activeTab = ref("Posts");
+const tabs = ["Posts", "Events", "Scrapbook"];
 
 // Fetch posts for the given group ID
 const fetchGroupPosts = async () => {
@@ -68,30 +71,74 @@ onMounted(async () => {
 </script>
 
 <template>
-  <header class="group-header">
-    <h1 v-if="loaded">Group: {{ groupTitle }}</h1>
-    <h1 v-else>Loading...</h1>
-  </header>
-  <div class="group-details-container">
-    <div class="half-section">
+  <main class="group-stats">
+    <h2 class="section-title">Group: {{ groupTitle }}</h2>
+
+    <!-- Tabs Section -->
+    <div class="tabs">
+      <button v-for="tab in tabs" :key="tab" :class="['tab', { active: activeTab === tab }]" @click="activeTab = tab">
+        {{ tab }}
+      </button>
+    </div>
+
+    <!-- Dynamic Content -->
+    <div v-if="activeTab === 'Posts'" class="tab-content">
       <PostListComponent :groupId="groupId" v-if="isLoggedIn" />
     </div>
-    <div class="half-section">
+
+    <div v-if="activeTab === 'Events'" class="tab-content">
       <EventListComponent :groupId="groupId" v-if="isLoggedIn" />
     </div>
-  </div>
+
+    <div v-if="activeTab === 'Scrapbook'" class="tab-content">
+      <ScrapbookListComponent :groupId="groupId" v-if="isLoggedIn" />
+    </div>
+  </main>
 </template>
 
 <style scoped>
-.group-details-container {
+.group-stats {
   display: flex;
-  height: 100%; /* Make it occupy the full height of the parent container */
+  flex-direction: column;
+  height: 100%;
   background-color: var(--cordovan);
+  padding: 20px;
 }
 
-.half-section {
-  flex: 1; /* Each section takes up 50% of the container */
-  border: 1px solid #ccc; /* Optional: add borders for better visibility */
-  overflow-y: auto; /* Allow scrolling if content exceeds the section height */
+.section-title {
+  margin-bottom: 20px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: flex-start;
+  background-color: var(--light-gray);
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+.tab:hover {
+  background-color: var(--light-cordovan);
+}
+
+.tab.active {
+  background-color: var(--cordovan);
+  color: white;
+  font-weight: bold;
+}
+
+.tab-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
 }
 </style>

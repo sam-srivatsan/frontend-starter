@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
-import { ObjectId } from "mongodb";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
 const props = defineProps(["post"]);
 const emit = defineEmits(["editPost", "refreshPosts"]);
 const { currentUsername } = storeToRefs(useUserStore());
-const authorUsername = ref("");
-console.log(props.post);
 
 const deletePost = async () => {
   try {
@@ -20,29 +16,11 @@ const deletePost = async () => {
   }
   emit("refreshPosts");
 };
-
-// const getUsername = async (authorId: string) => {
-//   try {
-//     console.log("entered try block");
-//     const response = await fetchy(`/api/users/${authorId}`, "GET");
-//     console.log("response is", response);
-//     authorUsername.value = response;
-//   } catch (error) {
-//     console.error("Error fetching author username:", error);
-//     authorUsername.value = "Unknown"; // Fallback in case of error
-//   }
-//   emit("refreshPosts");
-// };
-
-// // Fetch the username when the component is mounted
-// onMounted(() => {
-//   getUsername(props.post.author); // Call getUsername with the author's ID
-// });
 </script>
 
 <template>
   <p class="author">{{ props.post.author }}</p>
-  <p>{{ props.post.content }}</p>
+  <im>{{ props.post.content }}</im>
   <div class="base">
     <menu v-if="props.post.author == currentUsername">
       <li><button class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>

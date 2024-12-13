@@ -21,6 +21,12 @@ class Routes {
     return await Authing.getUserById(user);
   }
 
+  @Router.get("/users/:id")
+  async getUsernameFromId(str_id: string) {
+    const id = new ObjectId(str_id);
+    return await Authing.getUserById(id);
+  }
+
   @Router.get("/users")
   async getUsers() {
     return await Authing.getUsers();

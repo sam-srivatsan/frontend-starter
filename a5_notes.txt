@@ -2,8 +2,11 @@ adding an image posting board:
 use the same posting.ts class. content is a string, but that string can be ONLY AN IMAGE URL
 then in postcomponent (or that version for the scrapbook image posting), put the props.post.content in image tags
 
-scrapbooking
-- can see all scrapbooks
-
-eventing & posting
-- event title/date, and post content should show up instead of creator ID
+1. get posts to show content and author instead of author id
+2. get events to show title and date and author instead of creator id
+3. edit post button
+4. edit event button
+5. create a scrapbook view and add to tabs
+6. make scrapbook a different class/database from posting (images)
+7. google translate api
+8. magnify font?
