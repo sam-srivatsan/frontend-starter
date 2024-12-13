@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
-import { ObjectId } from "mongodb";
 
 const content = ref("");
 const emit = defineEmits(["refreshPosts"]);
@@ -14,9 +13,9 @@ const props = defineProps<{
 
 const createPost = async (content: string, groupId: string) => {
   try {
-    console.log('groupid inside createfrom frontend', groupId)
+    console.log("groupid inside createfrom frontend", groupId);
     await fetchy("/api/posts", "POST", {
-      body: { content, groupId }
+      body: { content, groupId },
     });
   } catch (_) {
     return;

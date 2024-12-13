@@ -1,0 +1,8 @@
+adding an image posting board:
+use the same posting.ts class. content is a string, but that string can be ONLY AN IMAGE URL
+then in postcomponent (or that version for the scrapbook image posting), put the props.post.content in image tags
+
+
+events
+- just use everything from post
+- still have some routes? 
