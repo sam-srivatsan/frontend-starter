@@ -45,7 +45,7 @@ form {
 }
 
 textarea {
-  font-family: inherit;
+  font-family: "Quando", serif;
   font-size: inherit;
   height: 1em;
   padding: 0.5em;

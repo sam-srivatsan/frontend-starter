@@ -101,7 +101,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: var(--cordovan);
+  background-color: var(--royal);
   padding: 20px;
 }
 
@@ -127,11 +127,11 @@ onMounted(async () => {
 }
 
 .tab:hover {
-  background-color: var(--light-cordovan);
+  background-color: var(--light-royal);
 }
 
 .tab.active {
-  background-color: var(--cordovan);
+  background-color: var(--base-bg);
   color: white;
   font-weight: bold;
 }

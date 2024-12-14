@@ -6,6 +6,4 @@ then in postcomponent (or that version for the scrapbook image posting), put the
 2. get events to show title and date and author instead of creator id
 3. edit post button
 4. edit event button
-5. create a scrapbook view and add to tabs
-6. make scrapbook a different class/database from posting (images)
 7. google translate api

@@ -10,3 +10,11 @@ import RegisterForm from "@/components/Login/RegisterForm.vue";
     <RegisterForm />
   </main>
 </template>
+
+<style scoped>
+main {
+  background-color: var(--royal); /* Set your desired background color */
+  min-height: 100vh; /* Ensures it takes the full viewport height */
+  padding: 20px; /* Adds some padding for spacing */
+}
+</style>

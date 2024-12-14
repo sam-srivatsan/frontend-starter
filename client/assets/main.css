@@ -2,10 +2,10 @@
 
 :root {
   --red: rgb(208, 67, 12);
-  --base-bg: #ef946c;
-  --cordovan: #904e55;
+  --base-bg: #649de9;
+  --royal: #94c7ef;
   --gunmetal: #183642;
-  --cambridge: #739e82;
+  --hunter: #495f41;
 }
 
 button.btn-small {
@@ -18,7 +18,7 @@ button.button-error {
 }
 
 a.button {
-  color: #212529;
+  color: #649de9;
   background-color: #f1f3f5;
   border: 1px solid #dee2e6;
   border-radius: 0.25em;
