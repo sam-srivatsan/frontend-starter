@@ -241,6 +241,18 @@ class Routes {
     return await Grouping.inviteUser(groupOid, inviteeOid);
   }
 
+  // Add this method to fetch group members
+@Router.get("/group/:groupId/members")
+async getGroupMembers(groupId: string) {
+  const groupOid = new ObjectId(groupId); // Convert string groupId to ObjectId
+  const group = await Grouping.groups.readOne({ _id: groupOid });
+
+  if (!group) throw new NotFoundError("Group not found!"); // Handle case when group is not found
+
+  return group.members; // Return the list of members (Array of ObjectIds)
+}
+
+
   @Router.delete("/group/:groupId/members")
   async leaveGroup(session: SessionDoc, groupId: string) {
     const user = Sessioning.getUser(session);

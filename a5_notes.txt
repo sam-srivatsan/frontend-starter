@@ -6,4 +6,6 @@ then in postcomponent (or that version for the scrapbook image posting), put the
 2. get events to show title and date and author instead of creator id
 3. edit post button
 4. edit event button
+5. group descriptions showing up somewhere
+6. add member to group button
 7. google translate api

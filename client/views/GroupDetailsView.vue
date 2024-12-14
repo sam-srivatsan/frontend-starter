@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import EventListComponent from "@/components/Event/EventListComponent.vue";
-import PostListComponent from "@/components/Post/PostListComponent.vue";
+import GroupSettingComponent from "@/components/Group/GroupSettingComponent.vue";
 import ImagePostListComponent from "@/components/ImagePost/ImagePostListComponent.vue";
+import PostListComponent from "@/components/Post/PostListComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
@@ -22,7 +23,7 @@ const groupTitle = ref("");
 const posts = ref([]);
 const loaded = ref(false);
 const activeTab = ref("Posts");
-const tabs = ["Posts", "Events", "Scrapbook"];
+const tabs = ["Posts", "Events", "Scrapbook", "Group Settings"];
 
 // Fetch posts for the given group ID
 const fetchGroupPosts = async () => {
@@ -92,6 +93,10 @@ onMounted(async () => {
 
     <div v-if="activeTab === 'Scrapbook'" class="tab-content">
       <ImagePostListComponent :groupId="groupId" v-if="isLoggedIn" />
+    </div>
+
+    <div v-if="activeTab === 'Group Settings'" class="tab-content">
+      <GroupSettingComponent :groupId="groupId" v-if="isLoggedIn" />
     </div>
   </main>
 </template>
