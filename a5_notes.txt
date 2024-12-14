@@ -1,11 +1,5 @@
-adding an image posting board:
-use the same posting.ts class. content is a string, but that string can be ONLY AN IMAGE URL
-then in postcomponent (or that version for the scrapbook image posting), put the props.post.content in image tags
-
-1. get posts to show content and author instead of author id
-2. get events to show title and date and author instead of creator id
-3. edit post button
-4. edit event button
-5. group descriptions showing up somewhere
-6. add member to group button
-7. google translate api
+todos left
+- group descriptions appearing (format in responses.ts)
+- add member to group button fix
+- events id and information appearing (format in repsonses.ts)
+- google translate api 

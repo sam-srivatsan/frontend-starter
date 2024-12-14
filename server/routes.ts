@@ -101,7 +101,8 @@ class Routes {
   async getPostsByGroupId(groupId: string) {
     const groupOid = new ObjectId(groupId);
     const posts = await Posting.getPostsByGroup(groupOid);
-    return posts;
+    const postsReturned = await Responses.posts(posts);
+    return postsReturned;
   }
 
   @Router.post("/posts")
@@ -145,9 +146,11 @@ class Routes {
 
   @Router.get("/group/:groupId/image-posts")
   async getImagePostsByGroupId(groupId: string) {
-    console.log("entered getImagePostsbyGroupId in routes.ts")
+    console.log("entered getImagePostsbyGroupId in routes.ts");
     const groupOid = new ObjectId(groupId);
-    return await Posting.getImagePostsByGroup(groupOid);
+    const posts = await Posting.getImagePostsByGroup(groupOid);
+    const postsReturned = await Responses.imagePosts(posts);
+    return postsReturned;
   }
 
   @Router.post("/image-posts")
@@ -340,8 +343,9 @@ async getGroupMembers(groupId: string) {
 
     const groupOid = new ObjectId(groupId); // Convert string to ObjectId
     const events = await Eventing.getEventsByGroup(groupOid); // Fetch events for the specified group ID
-    console.log("events", events);
-    return events; // Return the events found
+    const eventsReturned = await Responses.events(events);
+    return eventsReturned;
+
   }
 
   // Getter for Groups

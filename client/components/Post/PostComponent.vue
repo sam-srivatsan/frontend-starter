@@ -21,23 +21,6 @@ const deletePost = async () => {
   emit("refreshPosts");
 };
 
-// const getUsername = async (authorId: string) => {
-//   try {
-//     console.log("entered try block");
-//     const response = await fetchy(`/api/users/${authorId}`, "GET");
-//     console.log("response is", response);
-//     authorUsername.value = response;
-//   } catch (error) {
-//     console.error("Error fetching author username:", error);
-//     authorUsername.value = "Unknown"; // Fallback in case of error
-//   }
-//   emit("refreshPosts");
-// };
-
-// // Fetch the username when the component is mounted
-// onMounted(() => {
-//   getUsername(props.post.author); // Call getUsername with the author's ID
-// });
 </script>
 
 <template>

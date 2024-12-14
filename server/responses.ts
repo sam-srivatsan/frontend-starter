@@ -1,7 +1,8 @@
 import { Authing } from "./app";
 import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestDoc, FriendRequestNotFoundError } from "./concepts/friending";
 import { GroupDoc } from "./concepts/grouping";
-import { PostAuthorNotMatchError, PostDoc } from "./concepts/posting";
+import { PostAuthorNotMatchError, PostDoc, ImagePostDoc } from "./concepts/posting";
+import { EventDoc } from "./concepts/eventing";
 import { Router } from "./framework/router";
 
 /**
@@ -20,6 +21,22 @@ export default class Responses {
     return { ...post, author: author.username };
   }
 
+  static async imagePost(post: ImagePostDoc | null) {
+    if (!post) {
+      return post;
+    }
+    const author = await Authing.getUserById(post.author);
+    return { ...post, author: author.username };
+  }
+
+  static async event(event: EventDoc | null) {
+    if (!event) {
+      return event;
+    }
+    const author = await Authing.getUserById(event.creator);
+    return { ...event, author: author.username };
+  }
+
   /**
    * Same as {@link post} but for an array of PostDoc for improved performance.
    */
@@ -28,6 +45,15 @@ export default class Responses {
     return posts.map((post, i) => ({ ...post, author: authors[i] }));
   }
 
+  static async imagePosts(posts: ImagePostDoc[]) {
+    const authors = await Authing.idsToUsernames(posts.map((post) => post.author));
+    return posts.map((post, i) => ({ ...post, author: authors[i] }));
+  }
+
+  static async events(events: EventDoc[]) {
+    const authors = await Authing.idsToUsernames(events.map((events) => events.creator));
+    return events.map((event, i) => ({ ...event, author: authors[i] }));
+  }
   /**
    * Convert GroupDoc into a more readable format for the frontend.
    */
