@@ -10,7 +10,7 @@ import TranslateConcept from "./concepts/translate";
 // and synchronized together in `routes.ts`.
 export const Sessioning = new SessioningConcept();
 export const Authing = new AuthenticatingConcept("users");
-export const Posting = new PostingConcept("posts");
+export const Posting = new PostingConcept("posts","image-posts");
 export const Friending = new FriendingConcept("friends");
 export const Grouping = new GroupingConcept("groups");
 export const Eventing = new EventingConcept("events");
